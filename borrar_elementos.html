@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <div id="app"></div>
+    <script>
+        const vm = Vue.createApp({
+          data() {
+            return {
+              text: "Accede a tu cuenta",
+              open: false,
+              username: "",
+              posts: [
+                {
+                  title: "Titulo 1",
+                  description: "Lorem ipsum..."
+                },
+                {
+                  title: "Titulo 2",
+                  description: "Lorem ipsum..."
+                }
+              ],
+              newTitle: "",
+              newDescription: ""
+            };
+          },
+          watch: {
+            open(val) {
+              if (val) {
+                this.text = "Cierra sesión";
+              } else {
+                this.text = "Accede a tu cuenta";
+                this.username = "";
+              }
+            }
+          },
+          computed: {
+            styles() {
+              return this.open ? ['open'] : ['closed'];
+            }
+          },
+          methods: {
+            add() {
+              this.posts.push(
+                {
+                  title:this.newTitle,
+                  description: this.newDescription
+                }
+              );
+              this.newTitle = "";
+              this.newDescription = "";
+            },
+            del(index) {
+              this.posts.splice(0, 1);
+              console.log(index);
+            }
+          },
+          template: `
+            <div class="container" :class="styles">
+                <div class ="row text-center ">
+                    <div class ="col-md-12 mt-5 pt-5">
+                        <h1>{{ text }}</h1>
+                    </div>
+                    <div v-if="open" class ="col-md-12">
+                        <h3>Hola, {{ username }}</h3>
+                        <div class="list">
+                            <div v-for="( { title, description  }, index ) in posts" :key="index" class="list-item">
+                                <div class="title mt-3">
+                                    {{ title }}
+                                </div>
+                                <p class="mb-0">
+                                    {{ description }}
+                                </p>
+                                <div class= "row mb-3">
+                                    <div class="col-md-12">
+                                        <button v-on:click="del(index)">Eliminar</button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Agregar un elemento a la lista</h4>
+                            <div>
+                              <label>Titulo</label><br>
+                              <input type="text" v-model="newTitle" />
+                            </div>
+                            <div>
+                              <label>Descripción</label> <br>
+                              <input type="text" v-model="newDescription" />
+                            </div>
+                            <button v-on:click="add">Agregar</button>
+                        </div>
+                    </div>
+                    <div v-else  class ="col-md-12">
+                        <div>Username</div>
+                        <input type="text" v-model="username" />
+                    </div>
+
+                    <div class ="col-md-12 mb-5 pb-5">
+                        <button @click="open=!open">
+                            <div v-if="!open">Acceder</div>
+                            <div v-else>Salir</div>
+                            {{ label }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+          `
+        }).mount("#app");
+      </script>
+      <style>
+        html, body {
+            height: 100vh;
+            width: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #app, .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+        button {
+            margin-top: 10px;
+            border: none;
+            background-color: white;
+            padding: 8px 24px;
+            border-radius: 12px;
+        }
+        .mb-0{
+          margin-bottom: 0;
+        }
+        .closed {
+            background-color: #eca1a6;
+            padding-top:100px ;
+            padding-bottom: 100px;
+        }
+        .open {
+            background-color: #b5e7a0;
+            padding-top:100px ;
+            padding-bottom: 100px;
+        }
+        .list {
+          display: flex;
+          flex-direction: column;
+        }
+        .list-item {
+          border: 1px solid black;
+        }
+        .title {
+          font-weight: bold;
+          font-size: 1.5em;
+        }
+      </style>
+</body>
+</html>
